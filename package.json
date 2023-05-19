@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "mapshaper": "^0.6.29"
+  },
+  "scripts": {
+    "download": "bash scripts/download.sh",
+    "gen": "bash scripts/gen.sh",
+    "gen-simplified": "bash scripts/gen-simplified.sh",
+    "gen-percent": "bash scripts/gen-percent.sh",
+    "gen-resolution": "bash scripts/gen-resolution.sh"
+  }
+}

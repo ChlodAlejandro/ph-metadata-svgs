@@ -1,0 +1,74 @@
+on:
+    workflow_dispatch:
+        inputs:
+            PHL_ADMBNDA_RESOURCE_ROOT:
+                description: 'Resource root'
+                required: false
+                type: string
+            PHL_ADMBNDA_NOADM3_URL:
+                description: 'URL to Philippine administrative level 0-2 shapefiles'
+                required: false
+                type: string
+            PHL_ADMBNDA_ADM3_URL:
+                description: 'URL to Philippine administrative level 3 shapefiles'
+                required: false
+                type: string
+            PHL_ADMBNDA_NOADM3_FILE:
+                description: 'Philippine administrative level 0-2 shapefiles ZIP filename. Used in conjunction with PHL_ADMBNDA_RESOURCE_ROOT.'
+                required: false
+                type: string
+            PHL_ADMBNDA_ADM3_FILE:
+                description: 'Philippine administrative level 3 shapefiles ZIP filename. Used in conjunction with PHL_ADMBNDA_RESOURCE_ROOT.'
+                required: false
+                type: string
+
+jobs:
+    commons:
+        name: Build images for Wikimedia Commons
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v3
+
+            -   name: Setup Node
+                uses: actions/setup-node@v3
+                with:
+                    node-version: lts
+                    cache: 'npm'
+
+            -   name: Install dependencies
+                run: npm ci
+
+            -   name: Get SHA hash of download script
+                id: download-script-sha
+                run: echo "hash=$(sha256sum scripts/download.sh | cut -d ' ' -f 1)" >> $GITHUB_OUTPUT
+
+            -   name: Cache shapefiles
+                id: cache-shapefiles
+                uses: actions/cache@v3
+                env:
+                  cache-name: ph-adm-shapefiles
+                with:
+                  path: data
+                  key: download-script-${{ steps.download-script-sha.outputs.hash }}
+                  enableCrossOsArchive: true
+
+            -   if: ${{ steps.cache-shapefiles.outputs.cache-hit != 'true' }}
+                name: Download data
+                env:
+                    PHL_ADMBNDA_RESOURCE_ROOT: ${{ inputs.PHL_ADMBNDA_RESOURCE_ROOT }}
+                    PHL_ADMBNDA_NOADM3_URL: ${{ inputs.PHL_ADMBNDA_NOADM3_URL }}
+                    PHL_ADMBNDA_ADM3_URL: ${{ inputs.PHL_ADMBNDA_ADM3_URL }}
+                run: npm run download
+
+            -   name: Build 10%
+                run: npm run gen-percentage 10
+
+            -   name: Build 12k
+                run: npm run gen-resolution 12329x16537
+
+            -   name: Upload artifacts
+                uses: actions/upload-artifact@v3
+                with:
+                    name: wikimedia-commons
+                    path: out/*

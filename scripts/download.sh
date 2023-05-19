@@ -23,25 +23,29 @@ if [ -z "$PHL_ADMBNDA_NOADM3_URL" ]; then
     if [ -z "$PHL_ADMBNDA_NOADM3_FILE" ]; then
         PHL_ADMBNDA_NOADM3_FILE="phl_adminboundaries_candidate_exclude_adm3.zip"
     fi
-    PHL_ADMBNDA_NOADM3_URL="$RESOURCE_ROOT/$PHL_ADMBNDA_NOADM3_FILE"
+    PHL_ADMBNDA_NOADM3_URL="$PHL_ADMBNDA_RESOURCE_ROOT/$PHL_ADMBNDA_NOADM3_FILE"
 fi
 if [ -z "$PHL_ADMBNDA_ADM3_URL" ]; then
     if [ -z "$PHL_ADMBNDA_ADM3_FILE" ]; then
         PHL_ADMBNDA_ADM3_FILE="phl_adminboundaries_candidate_adm3.zip"
     fi
-    PHL_ADMBNDA_ADM3_URL="$RESOURCE_ROOT/$PHL_ADMBNDA_ADM3_FILE"
+    PHL_ADMBNDA_ADM3_URL="$PHL_ADMBNDA_RESOURCE_ROOT/$PHL_ADMBNDA_ADM3_FILE"
 fi
 
 echo
 echo "Downloading ZIP for adminstrative divisions 0 (country), 1 (region), and 2 (province)..."
+set -x
 wget $PHL_ADMBNDA_NOADM3_URL \
     --no-clobber -O data/phl_adminboundaries_candidate_exclude_adm3.zip
 unzip -n -d data data/phl_adminboundaries_candidate_exclude_adm3.zip \
     phl_admbnda_adm2_psa_namria_*.shp
+set +x
 
 echo
 echo "Downloading ZIP for adminstrative division 3 (municipalities)..."
+set -x
 wget $PHL_ADMBNDA_ADM3_URL \
     --no-clobber -O data/phl_adminboundaries_candidate_adm3.zip
 unzip -n -d data data/phl_adminboundaries_candidate_adm3.zip \
     phl_admbnda_adm3_psa_namria_*.shp
+set +x

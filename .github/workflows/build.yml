@@ -1,8 +1,19 @@
 on:
+    push:
+        branches:
+            - master
     workflow_dispatch:
         inputs:
             PHL_ADMBNDA_RESOURCE_ROOT:
                 description: 'Resource root'
+                required: false
+                type: string
+            PHL_ADMBNDA_NOADM3_FILE:
+                description: 'Philippine administrative level 0-2 shapefiles ZIP filename. Used in conjunction with the resource root.'
+                required: false
+                type: string
+            PHL_ADMBNDA_ADM3_FILE:
+                description: 'Philippine administrative level 3 shapefiles ZIP filename. Used in conjunction with resource root.'
                 required: false
                 type: string
             PHL_ADMBNDA_NOADM3_URL:
@@ -11,14 +22,6 @@ on:
                 type: string
             PHL_ADMBNDA_ADM3_URL:
                 description: 'URL to Philippine administrative level 3 shapefiles'
-                required: false
-                type: string
-            PHL_ADMBNDA_NOADM3_FILE:
-                description: 'Philippine administrative level 0-2 shapefiles ZIP filename. Used in conjunction with PHL_ADMBNDA_RESOURCE_ROOT.'
-                required: false
-                type: string
-            PHL_ADMBNDA_ADM3_FILE:
-                description: 'Philippine administrative level 3 shapefiles ZIP filename. Used in conjunction with PHL_ADMBNDA_RESOURCE_ROOT.'
                 required: false
                 type: string
 
@@ -33,7 +36,7 @@ jobs:
             -   name: Setup Node
                 uses: actions/setup-node@v3
                 with:
-                    node-version: lts
+                    node-version: lts/*
                     cache: 'npm'
 
             -   name: Install dependencies

@@ -3,27 +3,6 @@ on:
         branches:
             - master
     workflow_dispatch:
-        inputs:
-            PHL_ADMBNDA_RESOURCE_ROOT:
-                description: 'Resource root'
-                required: false
-                type: string
-            PHL_ADMBNDA_NOADM3_FILE:
-                description: 'Philippine administrative level 0-2 shapefiles ZIP filename. Used in conjunction with the resource root.'
-                required: false
-                type: string
-            PHL_ADMBNDA_ADM3_FILE:
-                description: 'Philippine administrative level 3 shapefiles ZIP filename. Used in conjunction with resource root.'
-                required: false
-                type: string
-            PHL_ADMBNDA_NOADM3_URL:
-                description: 'URL to Philippine administrative level 0-2 shapefiles'
-                required: false
-                type: string
-            PHL_ADMBNDA_ADM3_URL:
-                description: 'URL to Philippine administrative level 3 shapefiles'
-                required: false
-                type: string
 
 jobs:
     commons:
@@ -58,10 +37,6 @@ jobs:
 
             -   if: ${{ steps.cache-shapefiles.outputs.cache-hit != 'true' }}
                 name: Download data
-                env:
-                    PHL_ADMBNDA_RESOURCE_ROOT: ${{ inputs.PHL_ADMBNDA_RESOURCE_ROOT }}
-                    PHL_ADMBNDA_NOADM3_URL: ${{ inputs.PHL_ADMBNDA_NOADM3_URL }}
-                    PHL_ADMBNDA_ADM3_URL: ${{ inputs.PHL_ADMBNDA_ADM3_URL }}
                 run: npm run download
 
             -   name: Build 10%

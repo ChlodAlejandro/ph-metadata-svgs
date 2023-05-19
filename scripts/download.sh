@@ -11,41 +11,28 @@ if [ ! -d "data" ]; then
     mkdir data
 fi
 
-echo
-if [ -z "$PHL_ADMBNDA_RESOURCE_ROOT" ]; then
-    echo "Downloading data from the UN OCHA..."
-    PHL_ADMBNDA_RESOURCE_ROOT="https://data.humdata.org/dataset/caf116df-f984-4deb-85ca-41b349d3f313/resource/c704850e-77a4-4d79-8024-a45093da2d91/download/"
-else
-    echo "Downloading data from $PHL_ADMBNDA_RESOURCE_ROOT..."
-fi
-
-if [ -z "$PHL_ADMBNDA_NOADM3_URL" ]; then
-    if [ -z "$PHL_ADMBNDA_NOADM3_FILE" ]; then
-        PHL_ADMBNDA_NOADM3_FILE="phl_adminboundaries_candidate_exclude_adm3.zip"
-    fi
-    PHL_ADMBNDA_NOADM3_URL="$PHL_ADMBNDA_RESOURCE_ROOT/$PHL_ADMBNDA_NOADM3_FILE"
-fi
-if [ -z "$PHL_ADMBNDA_ADM3_URL" ]; then
-    if [ -z "$PHL_ADMBNDA_ADM3_FILE" ]; then
-        PHL_ADMBNDA_ADM3_FILE="phl_adminboundaries_candidate_adm3.zip"
-    fi
-    PHL_ADMBNDA_ADM3_URL="$PHL_ADMBNDA_RESOURCE_ROOT/$PHL_ADMBNDA_ADM3_FILE"
-fi
+curl https://data.humdata.org/api/3/action/package_show?id=cod-ab-phl > data/cod-ab-phl.json
+PHL_ADMBNDA_DOWNLOAD_LIST=$(
+    node -e "process.stdout.write(
+        JSON.parse(require('fs').readFileSync('data/cod-ab-phl.json')).result.resources
+            .filter(
+                v => /^phl_adminboundaries_candidate_(?:exclude_)?adm\d\.zip$/gi.test(v.name) ||
+                    /Philippines administrative level [\d-]+ shapefiles/i.test(v.description)
+            )
+            .map(v => v.download_url)
+            .join('\n')
+    )"
+)
+echo $PHL_ADMBNDA_DOWNLOAD_LIST
 
 echo
-echo "Downloading ZIP for adminstrative divisions 0 (country), 1 (region), and 2 (province)..."
+echo "Downloading adminstrative division ZIPs..."
+echo "NOTE: Non-matching filenames are normal."
 set -x
-wget $PHL_ADMBNDA_NOADM3_URL \
-    --no-clobber -O data/phl_adminboundaries_candidate_exclude_adm3.zip
-unzip -n -d data data/phl_adminboundaries_candidate_exclude_adm3.zip \
-    phl_admbnda_adm2_psa_namria_*.shp
-set +x
-
-echo
-echo "Downloading ZIP for adminstrative division 3 (municipalities)..."
-set -x
-wget $PHL_ADMBNDA_ADM3_URL \
-    --no-clobber -O data/phl_adminboundaries_candidate_adm3.zip
-unzip -n -d data data/phl_adminboundaries_candidate_adm3.zip \
+wget $PHL_ADMBNDA_DOWNLOAD_LIST \
+    --progress=dot:giga \
+    --no-clobber -P data
+unzip -n -d data data/phl_adminboundaries_candidate_*.zip \
+    phl_admbnda_adm2_psa_namria_*.shp \
     phl_admbnda_adm3_psa_namria_*.shp
 set +x

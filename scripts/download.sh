@@ -35,7 +35,7 @@ wget $PHL_ADMBNDA_DOWNLOAD_LIST \
 
 for i in data/phl_adminboundaries_candidate_*.zip; do
     [ -f "$i" ] && unzip -n -d data $i \
-        phl_admbnda_adm2_psa_namria_*.shp \
-        phl_admbnda_adm3_psa_namria_*.shp
+        phl_admbnda_adm2_psa_namria_*.{shp,dbf} \
+        phl_admbnda_adm3_psa_namria_*.{shp,dbf}
 done
 set +x

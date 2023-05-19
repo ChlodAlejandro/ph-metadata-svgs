@@ -32,7 +32,10 @@ set -x
 wget $PHL_ADMBNDA_DOWNLOAD_LIST \
     --progress=dot:giga \
     --no-clobber -P data
-unzip -n -d data data/phl_adminboundaries_candidate_*.zip \
-    phl_admbnda_adm2_psa_namria_*.shp \
-    phl_admbnda_adm3_psa_namria_*.shp
+
+for i in data/phl_adminboundaries_candidate_*.zip; do
+    [ -f "$i" ] && unzip -n -d data $i \
+        phl_admbnda_adm2_psa_namria_*.shp \
+        phl_admbnda_adm3_psa_namria_*.shp
+done
 set +x

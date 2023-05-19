@@ -40,7 +40,7 @@ jobs:
                 run: npm run download
 
             -   name: Build 10%
-                run: npm run gen-percentage 10
+                run: npm run gen-percent 10
 
             -   name: Build 12k
                 run: npm run gen-resolution 12329x16537

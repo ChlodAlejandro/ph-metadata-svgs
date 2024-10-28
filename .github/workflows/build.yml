@@ -46,7 +46,7 @@ jobs:
                 run: npm run gen-resolution 12329x16537
 
             -   name: Upload artifacts
-                uses: actions/upload-artifact@v3
+                uses: actions/upload-artifact@v4
                 with:
                     name: wikimedia-commons
                     path: out/*

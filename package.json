@@ -1,7 +1,7 @@
 {
   "license": "Apache-2.0",
   "dependencies": {
-    "mapshaper": "^0.6.29"
+    "mapshaper": "^0.6.44"
   },
   "scripts": {
     "download": "bash scripts/download.sh",

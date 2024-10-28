@@ -1,0 +1,29 @@
+{
+    "ts-node": {
+        "require": ["tsconfig-paths/register"]
+    },
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "incremental": true,
+        "target": "ESNext",
+        "module": "NodeNext",
+        "outDir": "./build",
+
+        "allowJs": false,
+        "esModuleInterop": true,
+        "inlineSources": true,
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+
+        "paths": {
+            "@/*": [ "./src/*" ]
+        }
+    },
+    "include": [
+        "./src/**/*"
+    ],
+    "exclude": [
+        "./node_modules/**/*"
+    ]
+}

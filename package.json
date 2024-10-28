@@ -1,7 +1,14 @@
 {
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "dependencies": {
-    "mapshaper": "^0.6.29"
+    "bunyan": "^1.8.15",
+    "bunyan-format": "^0.2.1",
+    "ipull": "^3.9.0",
+    "mapshaper": "^0.6.29",
+    "yargs": "^17.7.2"
   },
   "scripts": {
     "download": "bash scripts/download.sh",
@@ -9,5 +16,14 @@
     "gen-simplified": "bash scripts/gen-simplified.sh",
     "gen-percent": "bash scripts/gen-percent.sh",
     "gen-resolution": "bash scripts/gen-resolution.sh"
+  },
+  "devDependencies": {
+    "@types/bunyan": "^1.8.11",
+    "@types/bunyan-format": "^0.2.9",
+    "@types/node": "^22.8.1",
+    "@types/yargs": "^17.0.33",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.6.3"
   }
 }
